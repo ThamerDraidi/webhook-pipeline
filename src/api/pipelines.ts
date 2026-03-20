@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createPipeline } from "../db/queries/pipelines.js";
+import { createPipeline } from "../db/queries/pipelines";
+import { BadRequestError } from "../error";
 
 export async function handleCreatePipeline(
   req: Request,
@@ -10,8 +11,7 @@ export async function handleCreatePipeline(
     const { name, event_type, actions, subscriber_urls } = req.body;
 
     if (!name || !event_type || !actions || !subscriber_urls) {
-      res.status(400).json({ error: "Missing required fields" });
-      return;
+      throw new BadRequestError("Missing required fields");
     }
 
     const pipeline = await createPipeline(

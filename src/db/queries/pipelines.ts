@@ -1,5 +1,6 @@
 import { db } from "../DBConnection";
 import { pipelines, pipelineActions, subscriptions } from "../schema";
+import { eq } from "drizzle-orm";
 
 export async function createPipeline(
   name: string,
@@ -29,4 +30,12 @@ export async function createPipeline(
   }
 
   return pipeline;
+}
+export async function getPipelineById(pipelineId: string) {
+  const [pipeline] = await db
+    .select()
+    .from(pipelines)
+    .where(eq(pipelines.id, pipelineId));
+
+  return pipeline ?? null;
 }

@@ -1,13 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
+import { config } from "./config";
+import { BaseError } from "./error";
 import { handleCreatePipeline } from "./api/pipelines";
-
-dotenv.config();
+import { handleWebhook } from "./api/webhooks";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
@@ -18,12 +17,16 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.post("/pipelines", handleCreatePipeline);
+app.post("/webhooks/:pipelineId", handleWebhook);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  if (err instanceof BaseError) {
+    return res.status(err.statusCode).json({ error: err.message });
+  }
   console.error(err.message);
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(config.port, () => {
+  console.log(`Server running on port ${config.port}`);
 });
