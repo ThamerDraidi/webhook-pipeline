@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { createPipeline, getPipelineById, getAllPipelines, deletePipeline, updatePipeline } from "../db/queries/pipelines";
-import { BadRequestError, NotFoundError } from "../error";
+import { createPipelineService, getAllPipelinesService, getPipelineService, updatePipelineService, deletePipelineService } from "../services/pipelines.service";
+import { BadRequestError } from "../error";
 
 export async function handleCreatePipeline(
   req: Request,
@@ -12,7 +12,7 @@ export async function handleCreatePipeline(
     if (!name || !event_type || !actions || !subscriber_urls) {
       throw new BadRequestError("Missing required fields");
     }
-    const pipeline = await createPipeline(name, event_type, actions, subscriber_urls);
+    const pipeline = await createPipelineService(name, event_type, actions, subscriber_urls);
     res.status(201).json(pipeline);
   } catch (err) {
     next(err);
@@ -25,8 +25,8 @@ export async function handleGetAllPipelines(
   next: NextFunction
 ) {
   try {
-    const allPipelines = await getAllPipelines();
-    res.json(allPipelines);
+    const pipelines = await getAllPipelinesService();
+    res.json(pipelines);
   } catch (err) {
     next(err);
   }
@@ -38,13 +38,8 @@ export async function handleGetPipeline(
   next: NextFunction
 ) {
   try {
-    const pipelineId = req.params.id as string;
-    const pipeline = await getPipelineById(pipelineId);
-    if (!pipeline) {
-      throw new NotFoundError("Pipeline not found");
-    }
-    const { secret, ...pipelineWithoutSecret } = pipeline;
-    res.json(pipelineWithoutSecret);
+    const pipeline = await getPipelineService(req.params.id as string);
+    res.json(pipeline);
   } catch (err) {
     next(err);
   }
@@ -56,18 +51,12 @@ export async function handleUpdatePipeline(
   next: NextFunction
 ) {
   try {
-    const pipelineId = req.params.id as string;
     const { name, event_type, actions, subscriber_urls } = req.body;
     if (!name || !event_type || !actions || !subscriber_urls) {
       throw new BadRequestError("Missing required fields");
     }
-    const pipeline = await getPipelineById(pipelineId);
-    if (!pipeline) {
-      throw new NotFoundError("Pipeline not found");
-    }
-    const updated = await updatePipeline(pipelineId, name, event_type, actions, subscriber_urls);
-    const { secret, ...updatedWithoutSecret } = updated;
-    res.json(updatedWithoutSecret);
+    const pipeline = await updatePipelineService(req.params.id as string, name, event_type, actions, subscriber_urls);
+    res.json(pipeline);
   } catch (err) {
     next(err);
   }
@@ -79,12 +68,7 @@ export async function handleDeletePipeline(
   next: NextFunction
 ) {
   try {
-    const pipelineId = req.params.id as string;
-    const pipeline = await getPipelineById(pipelineId);
-    if (!pipeline) {
-      throw new NotFoundError("Pipeline not found");
-    }
-    await deletePipeline(pipelineId);
+    await deletePipelineService(req.params.id as string);
     res.status(204).send();
   } catch (err) {
     next(err);

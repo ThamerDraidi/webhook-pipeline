@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getJobById } from "../db/queries/jobs";
-import { getDeliveryAttemptsByJobId } from "../db/queries/delivery";
-import { NotFoundError } from "../error";
+import { getJobService } from "../services/jobs.service";
 
 export async function handleGetJob(
   req: Request,
@@ -9,19 +7,8 @@ export async function handleGetJob(
   next: NextFunction
 ) {
   try {
-    const jobId = req.params.jobId as string;
-
-    const job = await getJobById(jobId);
-    if (!job) {
-      throw new NotFoundError("Job not found");
-    }
-
-    const deliveryAttempts = await getDeliveryAttemptsByJobId(jobId);
-
-    res.json({
-      ...job,
-      delivery_attempts: deliveryAttempts,
-    });
+    const job = await getJobService(req.params.jobId as string);
+    res.json(job);
   } catch (err) {
     next(err);
   }
