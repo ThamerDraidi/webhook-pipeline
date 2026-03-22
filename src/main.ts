@@ -3,30 +3,15 @@ import cors from "cors";
 import helmet from "helmet";
 import { config } from "./config";
 import { BaseError } from "./error";
-import { globalLimiter, webhookLimiter } from "./middleware/rateLimiter";
-import { verifyWebhookSignature } from "./middleware/webhookSignature";
-import { handleCreatePipeline, handleGetAllPipelines, handleGetPipeline, handleDeletePipeline,handleUpdatePipeline } from "./api/pipelines";
-import { handleWebhook } from "./api/webhooks";
-import { handleGetJob } from "./api/jobs";
+import { globalLimiter } from "./middleware/rateLimiter";
+import router from "./routes/index";
 
 const app = express();
-
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(globalLimiter);
-
-app.get("/health", (req: Request, res: Response) => {
-  res.json({ status: "ok" });
-});
-
-app.post("/pipelines", handleCreatePipeline);
-app.get("/pipelines", handleGetAllPipelines);
-app.get("/pipelines/:id", handleGetPipeline);
-app.delete("/pipelines/:id", handleDeletePipeline);
-app.put("/pipelines/:id", handleUpdatePipeline);
-app.post("/webhooks/:pipelineId", webhookLimiter, verifyWebhookSignature, handleWebhook);
-app.get("/jobs/:jobId", handleGetJob);
+app.use("/api", router);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof BaseError) {

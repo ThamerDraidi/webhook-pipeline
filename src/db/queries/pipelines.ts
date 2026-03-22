@@ -51,7 +51,14 @@ export async function getPipelineActions(pipelineId: string) {
     .orderBy(pipelineActions.orderIndex);
 }
 export async function getAllPipelines() {
-  return await db.select().from(pipelines);
+  return await db
+    .select({
+      id: pipelines.id,
+      name: pipelines.name,
+      eventType: pipelines.eventType,
+      createdAt: pipelines.createdAt,
+    })
+    .from(pipelines);
 }
 
 export async function deletePipeline(pipelineId: string) {
