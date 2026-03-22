@@ -24,3 +24,9 @@ export async function createDeliveryAttempt(
     error: error ?? null,
   });
 }
+export async function getDeliveryAttemptsByJobId(jobId: string) {
+  return await db
+    .select()
+    .from(deliveryAttempts)
+    .where(eq(deliveryAttempts.jobId, jobId));
+}

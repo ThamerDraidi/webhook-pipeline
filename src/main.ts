@@ -5,6 +5,7 @@ import { config } from "./config";
 import { BaseError } from "./error";
 import { handleCreatePipeline } from "./api/pipelines";
 import { handleWebhook } from "./api/webhooks";
+import { handleGetJob } from "./api/jobs";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/health", (req: Request, res: Response) => {
 
 app.post("/pipelines", handleCreatePipeline);
 app.post("/webhooks/:pipelineId", handleWebhook);
+app.get("/jobs/:jobId", handleGetJob);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof BaseError) {
