@@ -4,9 +4,9 @@ export const pipelines = pgTable("pipelines", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
   eventType: text("event_type").notNull(),
+  secret: text("secret").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
-
 export const pipelineActions = pgTable("pipeline_actions", {
   id: uuid("id").primaryKey().defaultRandom(),
   pipelineId: uuid("pipeline_id").references(() => pipelines.id, { onDelete: "cascade" }),

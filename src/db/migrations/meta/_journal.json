@@ -15,6 +15,13 @@
       "when": 1774209721996,
       "tag": "0001_sudden_millenium_guard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774214968645,
+      "tag": "0002_zippy_vivisector",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,7 @@
 import { db } from "../DBConnection";
 import { pipelines, pipelineActions, subscriptions } from "../schema";
 import { eq } from "drizzle-orm";
+import crypto from "crypto";
 
 export async function createPipeline(
   name: string,
@@ -8,9 +9,12 @@ export async function createPipeline(
   actions: { action_type: string; config: object; order_index: number }[],
   subscriberUrls: string[]
 ) {
+  const secret = crypto.randomBytes(32).toString("hex");
+
   const [pipeline] = await db.insert(pipelines).values({
     name,
     eventType,
+    secret,
   }).returning();
 
   for (const action of actions) {

@@ -25,3 +25,8 @@ export class InternalServerError extends BaseError {
     super(message, 500);
   }
 }
+export class UnauthorizedError extends BaseError {
+  constructor(message: string) {
+    super(message, 401);
+  }
+}
