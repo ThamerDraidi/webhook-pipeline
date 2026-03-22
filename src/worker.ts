@@ -5,6 +5,7 @@ import { levelCalculation } from "./actions/levelCalculation";
 import { achievementSystem } from "./actions/achievementSystem";
 import { updateJobStatus } from "./db/queries/jobs";
 import { getPipelineActions, getPipelineById } from "./db/queries/pipelines";
+import { deliverToSubscribers } from "./delivery";
 
 const worker = new Worker(
   "webhook-jobs",
@@ -12,10 +13,11 @@ const worker = new Worker(
     const { jobId, pipelineId, payload } = job.data;
 
     console.log(`Processing job: ${jobId}`);
+
     const pipeline = await getPipelineById(pipelineId);
     const eventType = pipeline?.eventType;
-    const actions = await getPipelineActions(pipelineId);
 
+    const actions = await getPipelineActions(pipelineId);
     const results: Record<string, unknown> = {};
 
     for (const action of actions) {
@@ -29,7 +31,9 @@ const worker = new Worker(
     }
 
     await updateJobStatus(jobId, "completed", results);
-    console.log(`Job ${jobId} completed`);
+    await deliverToSubscribers(jobId, pipelineId, results);
+
+    console.log(`Job ${jobId} completed and delivered`);
   },
   { connection: config.redis }
 );
