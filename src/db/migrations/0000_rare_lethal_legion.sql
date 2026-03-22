@@ -58,14 +58,14 @@ CREATE TABLE "subscriptions" (
 --> statement-breakpoint
 CREATE TABLE "user_achievements" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid,
+	"user_id" text,
 	"achievement_id" uuid,
 	"earned_at" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "user_events" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"user_id" uuid,
+	"user_id" text,
 	"event_type" text NOT NULL,
 	"reference_id" text,
 	"score_awarded" integer DEFAULT 0,
@@ -73,7 +73,7 @@ CREATE TABLE "user_events" (
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" uuid PRIMARY KEY NOT NULL,
+	"id" text PRIMARY KEY NOT NULL,
 	"total_score" integer DEFAULT 0,
 	"level" integer DEFAULT 0,
 	"created_at" timestamp DEFAULT now()

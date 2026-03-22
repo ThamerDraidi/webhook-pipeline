@@ -39,3 +39,10 @@ export async function getPipelineById(pipelineId: string) {
 
   return pipeline ?? null;
 }
+export async function getPipelineActions(pipelineId: string) {
+  return await db
+    .select()
+    .from(pipelineActions)
+    .where(eq(pipelineActions.pipelineId, pipelineId))
+    .orderBy(pipelineActions.orderIndex);
+}

@@ -53,7 +53,7 @@ export const deliveryAttempts = pgTable("delivery_attempts", {
 });
 
 export const users = pgTable("users", {
-  id: uuid("id").primaryKey(),
+  id: text("id").primaryKey(), 
   totalScore: integer("total_score").default(0),
   level: integer("level").default(0),
   createdAt: timestamp("created_at").defaultNow(),
@@ -61,7 +61,7 @@ export const users = pgTable("users", {
 
 export const userEvents = pgTable("user_events", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").references(() => users.id),
+  userId: text("user_id").references(() => users.id),
   eventType: text("event_type").notNull(),
   referenceId: text("reference_id"),
   scoreAwarded: integer("score_awarded").default(0),
@@ -76,7 +76,7 @@ export const achievements = pgTable("achievements", {
 
 export const userAchievements = pgTable("user_achievements", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").references(() => users.id),
+  userId: text("user_id").references(() => users.id),
   achievementId: uuid("achievement_id").references(() => achievements.id),
   earnedAt: timestamp("earned_at").defaultNow(),
 });
