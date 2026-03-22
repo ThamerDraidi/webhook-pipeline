@@ -2,7 +2,6 @@ import { pgTable, uuid, text, integer, timestamp, jsonb } from "drizzle-orm/pg-c
 
 export const pipelines = pgTable("pipelines", {
   id: uuid("id").primaryKey().defaultRandom(),
-  
   name: text("name").notNull(),
   eventType: text("event_type").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -10,7 +9,7 @@ export const pipelines = pgTable("pipelines", {
 
 export const pipelineActions = pgTable("pipeline_actions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  pipelineId: uuid("pipeline_id").references(() => pipelines.id),
+  pipelineId: uuid("pipeline_id").references(() => pipelines.id, { onDelete: "cascade" }),
   actionType: text("action_type").notNull(),
   config: jsonb("config"),
   orderIndex: integer("order_index").notNull(),
@@ -18,14 +17,14 @@ export const pipelineActions = pgTable("pipeline_actions", {
 
 export const subscriptions = pgTable("subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  pipelineId: uuid("pipeline_id").references(() => pipelines.id),
+  pipelineId: uuid("pipeline_id").references(() => pipelines.id, { onDelete: "cascade" }),
   targetUrl: text("target_url").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const jobs = pgTable("jobs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  pipelineId: uuid("pipeline_id").references(() => pipelines.id),
+  pipelineId: uuid("pipeline_id").references(() => pipelines.id, { onDelete: "cascade" }),
   status: text("status").notNull().default("pending"),
   payload: jsonb("payload").notNull(),
   result: jsonb("result"),
@@ -35,7 +34,7 @@ export const jobs = pgTable("jobs", {
 
 export const jobAttempts = pgTable("job_attempts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  jobId: uuid("job_id").references(() => jobs.id),
+  jobId: uuid("job_id").references(() => jobs.id, { onDelete: "cascade" }),
   attemptNumber: integer("attempt_number").notNull(),
   status: text("status").notNull(),
   error: text("error"),
@@ -44,8 +43,8 @@ export const jobAttempts = pgTable("job_attempts", {
 
 export const deliveryAttempts = pgTable("delivery_attempts", {
   id: uuid("id").primaryKey().defaultRandom(),
-  jobId: uuid("job_id").references(() => jobs.id),
-  subscriptionId: uuid("subscription_id").references(() => subscriptions.id),
+  jobId: uuid("job_id").references(() => jobs.id, { onDelete: "cascade" }),
+  subscriptionId: uuid("subscription_id").references(() => subscriptions.id, { onDelete: "cascade" }),
   status: text("status").notNull(),
   responseCode: integer("response_code"),
   error: text("error"),
@@ -53,7 +52,7 @@ export const deliveryAttempts = pgTable("delivery_attempts", {
 });
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey(), 
+  id: text("id").primaryKey(),
   totalScore: integer("total_score").default(0),
   level: integer("level").default(0),
   createdAt: timestamp("created_at").defaultNow(),
@@ -61,7 +60,7 @@ export const users = pgTable("users", {
 
 export const userEvents = pgTable("user_events", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
   eventType: text("event_type").notNull(),
   referenceId: text("reference_id"),
   scoreAwarded: integer("score_awarded").default(0),
@@ -76,7 +75,7 @@ export const achievements = pgTable("achievements", {
 
 export const userAchievements = pgTable("user_achievements", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id").references(() => users.id),
-  achievementId: uuid("achievement_id").references(() => achievements.id),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
+  achievementId: uuid("achievement_id").references(() => achievements.id, { onDelete: "cascade" }),
   earnedAt: timestamp("earned_at").defaultNow(),
 });

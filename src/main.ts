@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { config } from "./config";
 import { BaseError } from "./error";
-import { handleCreatePipeline } from "./api/pipelines";
+import { handleCreatePipeline, handleGetAllPipelines, handleGetPipeline, handleDeletePipeline,handleUpdatePipeline } from "./api/pipelines";
 import { handleWebhook } from "./api/webhooks";
 import { handleGetJob } from "./api/jobs";
 
@@ -18,6 +18,10 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.post("/pipelines", handleCreatePipeline);
+app.get("/pipelines", handleGetAllPipelines);
+app.get("/pipelines/:id", handleGetPipeline);
+app.delete("/pipelines/:id", handleDeletePipeline);
+app.put("/pipelines/:id", handleUpdatePipeline);
 app.post("/webhooks/:pipelineId", handleWebhook);
 app.get("/jobs/:jobId", handleGetJob);
 
