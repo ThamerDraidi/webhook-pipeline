@@ -1,1 +1,0 @@
-ALTER TABLE "pipelines" ADD COLUMN "secret" text NOT NULL;

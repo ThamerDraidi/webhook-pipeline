@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1774184084748,
-      "tag": "0000_rare_lethal_legion",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1774209721996,
-      "tag": "0001_sudden_millenium_guard",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1774214968645,
-      "tag": "0002_zippy_vivisector",
+      "when": 1774271160719,
+      "tag": "0000_purple_cannonball",
       "breakpoints": true
     }
   ]

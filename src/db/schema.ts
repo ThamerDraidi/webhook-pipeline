@@ -2,6 +2,7 @@ import { pgTable, uuid, text, integer, timestamp, jsonb } from "drizzle-orm/pg-c
 
 export const pipelines = pgTable("pipelines", {
   id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").references(() => authUsers.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   eventType: text("event_type").notNull(),
   secret: text("secret").notNull(),
@@ -78,4 +79,10 @@ export const userAchievements = pgTable("user_achievements", {
   userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
   achievementId: uuid("achievement_id").references(() => achievements.id, { onDelete: "cascade" }),
   earnedAt: timestamp("earned_at").defaultNow(),
+});
+export const authUsers = pgTable("auth_users", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
 });

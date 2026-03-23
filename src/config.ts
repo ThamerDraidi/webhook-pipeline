@@ -17,4 +17,8 @@ export const config = {
     host: "127.0.0.1",
     port: 6379,
   },
+  jwt: {
+    secret: envOrThrow("JWT_SECRET"),
+    expiresIn: "7d",
+  },
 };

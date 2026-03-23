@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
 export async function createPipeline(
+  userId: string,
   name: string,
   eventType: string,
   actions: { action_type: string; config: object; order_index: number }[],
@@ -12,6 +13,7 @@ export async function createPipeline(
   const secret = crypto.randomBytes(32).toString("hex");
 
   const [pipeline] = await db.insert(pipelines).values({
+    userId,
     name,
     eventType,
     secret,
@@ -35,14 +37,23 @@ export async function createPipeline(
 
   return pipeline;
 }
+
 export async function getPipelineById(pipelineId: string) {
   const [pipeline] = await db
     .select()
     .from(pipelines)
     .where(eq(pipelines.id, pipelineId));
-
   return pipeline ?? null;
 }
+
+export async function getPipelineWithSecret(pipelineId: string) {
+  const [pipeline] = await db
+    .select()
+    .from(pipelines)
+    .where(eq(pipelines.id, pipelineId));
+  return pipeline ?? null;
+}
+
 export async function getPipelineActions(pipelineId: string) {
   return await db
     .select()
@@ -50,7 +61,8 @@ export async function getPipelineActions(pipelineId: string) {
     .where(eq(pipelineActions.pipelineId, pipelineId))
     .orderBy(pipelineActions.orderIndex);
 }
-export async function getAllPipelines() {
+
+export async function getAllPipelines(userId: string) {
   return await db
     .select({
       id: pipelines.id,
@@ -58,7 +70,8 @@ export async function getAllPipelines() {
       eventType: pipelines.eventType,
       createdAt: pipelines.createdAt,
     })
-    .from(pipelines);
+    .from(pipelines)
+    .where(eq(pipelines.userId, userId));
 }
 
 export async function deletePipeline(pipelineId: string) {
@@ -66,6 +79,7 @@ export async function deletePipeline(pipelineId: string) {
     .delete(pipelines)
     .where(eq(pipelines.id, pipelineId));
 }
+
 export async function updatePipeline(
   pipelineId: string,
   name: string,
@@ -78,6 +92,7 @@ export async function updatePipeline(
     .set({ name, eventType })
     .where(eq(pipelines.id, pipelineId))
     .returning();
+
   await db.delete(pipelineActions).where(eq(pipelineActions.pipelineId, pipelineId));
   for (const action of actions) {
     await db.insert(pipelineActions).values({
@@ -87,6 +102,7 @@ export async function updatePipeline(
       orderIndex: action.order_index,
     });
   }
+
   await db.delete(subscriptions).where(eq(subscriptions.pipelineId, pipelineId));
   for (const url of subscriberUrls) {
     await db.insert(subscriptions).values({ pipelineId, targetUrl: url });
