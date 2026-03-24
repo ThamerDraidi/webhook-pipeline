@@ -14,11 +14,11 @@ export const config = {
     url: envOrThrow("DATABASE_URL"),
   },
   redis: {
-    host: "127.0.0.1",
-    port: 6379,
+    host: process.env.REDIS_HOST || "redis",
+    port: parseInt(process.env.REDIS_PORT || "6379"),
   },
   jwt: {
     secret: envOrThrow("JWT_SECRET"),
     expiresIn: "7d",
   },
-};
+}
