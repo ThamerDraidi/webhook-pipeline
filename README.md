@@ -15,10 +15,12 @@
 - [Prerequisites](#prerequisites)
 - [Running the App](#running-the-app)
 - [API Documentation](#api-documentation)
-- [Folder Structure](#folder-structure)
 - [Authentication & Authorization](#authentication--authorization)
 - [Features](#features)
+- [Pipeline Actions](#pipeline-actions)
+- [Subscriber Delivery](#subscriber-delivery)
 - [Reliability & Error Handling](#reliability--error-handling)
+- [Authentication & Security Enhancements](#authentication--security-enhancements)
 - [Future Improvements](#future-improvements)
 - [Authors](#authors)
 - [License](#license)
@@ -42,14 +44,14 @@ This is an event-driven backend service that processes incoming webhook events a
 
 ---
 
-### Why We Chose Node.js + TypeScript
+### Why i Chose Node.js + TypeScript
 - Fits event-driven, I/O-heavy workloads such as webhook processing pipelines.  
 - Handles JSON natively and allows faster development.  
 - Easy to run with Docker.  
 - Provides flexibility when working with queues.  
 - Offers a natural and efficient non-blocking, event-driven model compared to Python, where async patterns often require additional configuration.
 
-### Why We Chose PostgreSQL
+### Why i Chose PostgreSQL
 - Strong support for JSONB, perfect for storing event payloads.  
 - High performance in event-driven systems.  
 - Excellent integration with Node.js and TypeScript.  
@@ -57,7 +59,7 @@ This is an event-driven backend service that processes incoming webhook events a
 - Fully open-source and scalable.  
 - Compared to MySQL, offers stronger relational data modeling, stricter schema enforcement, advanced constraints, and better handling of complex relationships — ensuring high data integrity and consistency for tracking jobs, users, and pipelines.
 
-### Why We Chose Redis as a Queue
+### Why i Chose Redis as a Queue
 - Extremely fast in-memory data store, ideal for job queues.  
 - Supports reliable pub/sub patterns for worker communication.  
 - Easy retry and failure handling mechanisms.  
@@ -143,15 +145,6 @@ Each action performs a specific task
 11. Error Handling (error.ts)
 Centralized error system using BaseError
 Global error handler middleware
-
----
-
-**Components:**
-
-1. **API Service** – Handles HTTP requests, manages pipelines, pushes jobs to queue.  
-2. **Queue (Redis)** – Stores jobs temporarily, manages retries and job state.  
-3. **Worker Service** – Processes jobs asynchronously, executes business logic.  
-4. **Database (PostgreSQL)** – Stores persistent data (pipelines, jobs, users, achievements, etc.).
    
 ---
 
@@ -162,17 +155,17 @@ Global error handler middleware
 - Redis
 
 ---
-## ⚙️ Setup & Running the App
 
-###1. Setup environment variables (.env)
-```env
-DATABASE_URL=postgres://user:password@localhost:5432/webhookdb
-REDIS_URL=redis://localhost:6379
-PORT=3000
-2.Run Docker Compose:docker-compose up --build
-3.Access API=> Open in browser or use Postman:http://localhost:3000
-```
+## ⚙️ Running the App
+
+1.Run Docker Compose
+docker-compose up --build
+
+2.Access API
+Open in browser or use Postman:http://localhost:3000
+
 ---
+
 ## 📄 API Documentation
 
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
@@ -199,7 +192,42 @@ PORT=3000
 - Job monitoring API
   
 ---
+## ⚡ Pipeline Actions
 
+Each pipeline can execute one or more actions when a job is processed. In this project, the actions include:
+
+- **Score Calculation**  
+  Calculates points based on the event type (e.g., chapter completed, quiz submitted).  
+  **Purpose:** Gamifies progress and allows users to track achievements.
+
+- **Level Calculation**  
+  Computes the user's level based on their total score.  
+  **Purpose:** Provides a progression system and rewards consistent engagement.
+
+- **Achievement System**  
+  Awards badges or achievements when users reach specific milestones.  
+  **Purpose:** Encourages learning, motivates users, and tracks accomplishments.
+---
+## 📬 Subscriber Delivery
+
+After a job is processed, the results are sent to all registered subscribers for that pipeline.  
+
+- **Multiple Subscribers:** Each pipeline can have one or more subscriber endpoints (URLs).  
+- **Retry Logic:** Failed deliveries are retried with exponential backoff to ensure reliability.  
+- **Logging:** Every delivery attempt is logged to track success and failures.  
+
+**Example:**
+
+Suppose we have a pipeline `chapter_completed` with two subscribers:
+
+| Subscriber Name      | URL                                |
+|---------------------|-----------------------------------|
+| Learning Analytics  | https://analytics.example.com/hook |
+| Achievement Service | https://achievements.example.com/hook |
+
+When a user completes a chapter, the worker processes the event, calculates the score, updates levels, awards achievements, and then sends the result JSON to both subscriber URLs.
+
+---
 ## ⚡ Reliability & Error Handling
 - Retry mechanism with exponential backoff  
 - Logging of failed jobs  
@@ -242,6 +270,6 @@ PORT=3000
   Provides a visual interface to monitor pipelines, jobs, users, and metrics in real-time.  
   **Reason:** Makes system monitoring easier, gives a clear overview of all ongoing processes, and helps in quick decision-making without manually checking the database.
 
-©2026 Learning Webhook Pipeline. All rights reserved.
+                                           ©2026 Learning Webhook Pipeline. All rights reserved.
 
-Built with ☯︎ by Thamer Draidi
+                                                        Built with ☯︎ by Thamer Draidi
