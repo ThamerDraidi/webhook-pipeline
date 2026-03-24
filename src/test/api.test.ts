@@ -1,9 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
-import { app } from '../main'; 
+import { app } from '../main';
 import { pipelines, pipelineActions, subscriptions, users } from '../db/schema';
-import {db} from "../db/DBConnection"
+import { db } from "../db/DBConnection";
 import dotenv from 'dotenv';
+
 dotenv.config({ path: '.env.test' });
 
 describe('Pipeline Creation', () => {
@@ -42,7 +43,6 @@ describe('Pipeline Creation', () => {
       .post('/api/pipelines')
       .set('Authorization', `Bearer ${token}`)
       .send(pipelineData);
-
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('id');
     expect(res.body.name).toBe(pipelineData.name);

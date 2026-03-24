@@ -48,10 +48,15 @@ jobs:
       - name: TypeScript type check
         run: npx tsc --noEmit
 
+      - name: Run migrations
+        run: npx drizzle-kit migrate
+        env:
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/webhook_pipeline_test
+
       - name: Run tests
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/webhook_pipeline_test
-          REDIS_URL: redis://localhost:6379
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/webhook_pipeline_test
+          REDIS_URL: redis://redis:6379
           NODE_ENV: test
           JWT_SECRET: testsecret
         run: npm run test
