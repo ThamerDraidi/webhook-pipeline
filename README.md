@@ -7,11 +7,11 @@
 
 # Webhook-Driven Learning Pipeline
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
+- [Architecture](#architecture-overview)
 - [Prerequisites](#prerequisites)
 - [Running the App](#running-the-app)
 - [API Documentation](#api-documentation)
@@ -27,12 +27,12 @@
 
 ---
 
-## 🍀 Overview
+## Overview
 This is an event-driven backend service that processes incoming webhook events asynchronously using a job queue and worker architecture. The system simulates a simplified automation platform (like Zapier) with a gamified scoring system for users.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer            | Technology                                   |
 |------------------|---------------------------------------------|
@@ -44,14 +44,14 @@ This is an event-driven backend service that processes incoming webhook events a
 
 ---
 
-### Why i Chose Node.js + TypeScript
+### Why I Chose Node.js + TypeScript
 - Fits event-driven, I/O-heavy workloads such as webhook processing pipelines.  
 - Handles JSON natively and allows faster development.  
 - Easy to run with Docker.  
 - Provides flexibility when working with queues.  
 - Offers a natural and efficient non-blocking, event-driven model compared to Python, where async patterns often require additional configuration.
 
-### Why i Chose PostgreSQL
+### Why I Chose PostgreSQL
 - Strong support for JSONB, perfect for storing event payloads.  
 - High performance in event-driven systems.  
 - Excellent integration with Node.js and TypeScript.  
@@ -59,18 +59,18 @@ This is an event-driven backend service that processes incoming webhook events a
 - Fully open-source and scalable.  
 - Compared to MySQL, offers stronger relational data modeling, stricter schema enforcement, advanced constraints, and better handling of complex relationships — ensuring high data integrity and consistency for tracking jobs, users, and pipelines.
 
-### Why i Chose Redis as a Queue
+### Why I Chose Redis as a Queue
 - Extremely fast in-memory data store, ideal for job queues.  
 - Supports reliable pub/sub patterns for worker communication.  
 - Easy retry and failure handling mechanisms.  
 - Lightweight and integrates seamlessly with Node.js.  
 - Helps decouple API request handling from background processing, improving system scalability and responsiveness.
-  
+
 ---
 
-🧠 Architecture Overview
+## Architecture Overview
 
-### 🔄 Request Flow
+### Request Flow
 1. **Client Request**  
    External system sends a webhook or API request.  
 
@@ -98,57 +98,21 @@ This is an event-driven backend service that processes incoming webhook events a
 
 9. **Response**  
    API responds to client or logs job processing status asynchronously.
-   
+
 ---
 
-🧩 Core Components
-1. API Layer (api/)
-Handles incoming HTTP requests
-Validates input
-Calls the appropriate service
+### Core Components
+- **API Layer (api/)** – Handles incoming HTTP requests, validates input, calls the appropriate service.  
+- **Routes Layer (routes/)** – Defines API endpoints and connects routes to controllers.  
+- **Service Layer (services/)** – Contains business logic, handles data processing, communicates with DB and queues.  
+- **Middleware (middleware/)** – Handles authentication, rate limiting, and webhook signature validation.  
+- **Queue System (queue.ts, worker.ts)** – Manages async/background jobs to improve scalability and reliability.  
+- **Actions (actions/)** – Defines pipeline steps; each action performs a specific task.  
+- **Error Handling (error.ts)** – Centralized error system using BaseError and global error handler middleware.
 
-Examples:
-
-auth.ts
-webhooks.ts
-pipelines.ts
-jobs.ts
-
-2. Routes Layer (routes/)
-Defines API endpoints
-Connects routes to controllers
-
-Examples:
-
-auth.routes.ts
-webhooks.routes.ts
-
-3. Service Layer (services/)
-Contains business logic
-Handles data processing
-Communicates with DB and queues
-
-5. Middleware (middleware/)
-Cross-cutting concerns:
-Authentication
-Rate limiting
-Webhook signature validation
-
-7. Queue System (queue.ts, worker.ts)
-Handles async/background jobs
-Improves scalability and reliability
-
-9. Actions (actions/)
-Defines pipeline steps
-Each action performs a specific task
-
-11. Error Handling (error.ts)
-Centralized error system using BaseError
-Global error handler middleware
-   
 ---
 
-## ⚙️ Prerequisites
+## Prerequisites
 - Node.js v18+  
 - Docker & Docker Compose  
 - PostgreSQL  
@@ -156,16 +120,16 @@ Global error handler middleware
 
 ---
 
-## ⚙️ Running the App
-
-1.Run Docker Compose
+## Running the App
+1. Run Docker Compose:  
+```bash
 docker-compose up --build
 
 2.Access API
 Open in browser or use Postman:http://localhost:3000
 
 ---
-
+```
 ## 📄 API Documentation
 
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
