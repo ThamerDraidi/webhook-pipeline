@@ -41,6 +41,7 @@ This is an event-driven backend service that processes incoming webhook events a
 | Containerization | Docker & Docker Compose                       |
 
 ---
+
 ### Why We Chose Node.js + TypeScript
 - Fits event-driven, I/O-heavy workloads such as webhook processing pipelines.  
 - Handles JSON natively and allows faster development.  
@@ -64,45 +65,39 @@ This is an event-driven backend service that processes incoming webhook events a
 - Helps decouple API request handling from background processing, improving system scalability and responsiveness.
   
 ---
+
 🧠 Architecture Overview
 
-The project follows a layered architecture with clear separation of concerns:
+### 🔄 Request Flow
+1. **Client Request**  
+   External system sends a webhook or API request.  
 
-src/
-│
-├── api/            # Controllers (handle HTTP logic)
-├── routes/         # Route definitions
-├── services/       # Business logic layer
-├── db/             # Database configuration & queries
-├── middleware/     # Express middlewares (auth, rate limiting, etc.)
-├── actions/        # Pipeline/job actions
-├── utils/          # Helper functions
-├── types/          # TypeScript types/interfaces
-├── test/           # Unit & integration tests
-│
-├── main.ts         # App entry point
-├── config.ts       # App configuration
-├── error.ts        # Custom error classes
-├── queue.ts        # Job queue setup
-├── worker.ts       # Background workers
-├── delivery.ts     # Webhook delivery logic
+2. **Routes (`routes/`)**  
+   Request is routed to the appropriate controller based on the endpoint.  
 
+3. **Middleware (`middleware/`)**  
+   Optional checks like authentication, rate limiting, logging, etc.  
+
+4. **Controllers (`api/`)**  
+   Handle HTTP logic and call the relevant service functions.  
+
+5. **Services (`services/`)**  
+   Business logic layer executes actions such as score calculation, level update, and achievement tracking.  
+
+6. **Database / Queue (`db/` & `queue.ts`)**  
+   - Persistent storage: store jobs, pipelines, users, achievements.  
+   - Job queue: manage asynchronous background processing.  
+
+7. **Worker (`worker.ts`)**  
+   Background worker processes queued jobs and executes pipeline actions.  
+
+8. **Delivery (`delivery.ts`)**  
+   Sends processed results to subscriber endpoints.  
+
+9. **Response**  
+   API responds to client or logs job processing status asynchronously.
+   
 ---
-
-🔄 Request Flow
-Client Request
-     ↓
-Routes (routes/)
-     ↓
-Middleware (auth, rate limiter, etc.)
-     ↓
-Controllers (api/)
-     ↓
-Services (business logic)
-     ↓
-Database / Queue
-     ↓
-Response
 
 🧩 Core Components
 1. API Layer (api/)
@@ -152,13 +147,15 @@ Global error handler middleware
 ---
 
 **Components:**
+
 1. **API Service** – Handles HTTP requests, manages pipelines, pushes jobs to queue.  
 2. **Queue (Redis)** – Stores jobs temporarily, manages retries and job state.  
 3. **Worker Service** – Processes jobs asynchronously, executes business logic.  
 4. **Database (PostgreSQL)** – Stores persistent data (pipelines, jobs, users, achievements, etc.).
-   ---
-
+   
+---
 **Flow:**
+
 1. Webhook request received at pipeline URL  
 2. API stores the event as a job in Redis queue  
 3. Worker picks up job, executes actions  
