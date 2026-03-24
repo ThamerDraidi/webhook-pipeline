@@ -62,7 +62,8 @@ This is an event-driven backend service that processes incoming webhook events a
 - Easy retry and failure handling mechanisms.  
 - Lightweight and integrates seamlessly with Node.js.  
 - Helps decouple API request handling from background processing, improving system scalability and responsiveness.
-
+  
+---
 🧠 Architecture Overview
 
 The project follows a layered architecture with clear separation of concerns:
@@ -85,6 +86,8 @@ src/
 ├── queue.ts        # Job queue setup
 ├── worker.ts       # Background workers
 ├── delivery.ts     # Webhook delivery logic
+
+---
 
 🔄 Request Flow
 Client Request
@@ -146,11 +149,14 @@ Each action performs a specific task
 Centralized error system using BaseError
 Global error handler middleware
 
+---
+
 **Components:**
 1. **API Service** – Handles HTTP requests, manages pipelines, pushes jobs to queue.  
 2. **Queue (Redis)** – Stores jobs temporarily, manages retries and job state.  
 3. **Worker Service** – Processes jobs asynchronously, executes business logic.  
-4. **Database (PostgreSQL)** – Stores persistent data (pipelines, jobs, users, achievements, etc.).  
+4. **Database (PostgreSQL)** – Stores persistent data (pipelines, jobs, users, achievements, etc.).
+   ---
 
 **Flow:**
 1. Webhook request received at pipeline URL  
@@ -183,7 +189,7 @@ REDIS_URL=redis://localhost:6379
 PORT=3000
 2.Run Docker Compose:docker-compose up --build
 3.Access API=> Open in browser or use Postman:http://localhost:3000
-
+---
 ## 📄 API Documentation
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
 - **GET** `/jobs/:jobId` – Retrieve job status and history
@@ -195,7 +201,7 @@ PORT=3000
 ## 🔒 Authentication & Authorization
 - **Optional:** JWT-based authentication  
 - **Role-based access control:** Control access for pipelines and job monitoring
-
+---
 ## ✨ Features
 - Pipeline management (CRUD)  
 - Webhook ingestion & asynchronous processing  
@@ -205,12 +211,11 @@ PORT=3000
 - Subscriber delivery with retry & logging  
 - Job monitoring API
 ## ⚡ Reliability & Error Handling
-
 - Retry mechanism with exponential backoff  
 - Logging of failed jobs  
 - Tracking delivery attempts  
 - Graceful handling of worker crashes
-
+---
 ## 🔒 Authentication & Security Enhancements
 
 - **JWT-based Authentication**  
@@ -224,7 +229,7 @@ PORT=3000
 - **Rate Limiting**  
   Limits the number of requests per user or pipeline within a time frame.  
   **Reason:** Prevents abuse, DDoS attacks, and protects backend resources from being overwhelmed.
-
+---
 ## 🎯 Future Improvements
 - **Scalable Workers**  
   Currently, only one worker processes jobs, but the design allows running multiple workers on the same queue.  
