@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/webhook_pipeline_test
+          REDIS_URL: redis://127.0.0.1:6379
+          NODE_ENV: test
+          JWT_SECRET: testsecret
+        run: npm run test

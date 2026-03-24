@@ -20,7 +20,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.message);
   res.status(500).json({ error: "Internal Server Error" });
 });
-
 app.listen(config.port, () => {
   console.log(`Server running on port ${config.port}`);
 });
+export {app}
