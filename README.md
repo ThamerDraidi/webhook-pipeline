@@ -240,4 +240,8 @@ PORT=3000
 
 - **Dashboard UI**  
   Provides a visual interface to monitor pipelines, jobs, users, and metrics in real-time.  
-  **Reason:** Makes system monitoring easier, gives a clear overview of all ongoing processes, and helps in quick decision-making without manually checking the database. 
+  **Reason:** Makes system monitoring easier, gives a clear overview of all ongoing processes, and helps in quick decision-making without manually checking the database.
+
+©2026 Learning Webhook Pipeline. All rights reserved.
+
+Built with ☯︎ by Thamer Draidi
