@@ -130,7 +130,7 @@ Open in browser or use Postman:http://localhost:3000
 
 ---
 ```
-## 📄 API Documentation
+## API Documentation
 
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
 - **GET** `/jobs/:jobId` – Retrieve job status and history
@@ -138,14 +138,17 @@ Open in browser or use Postman:http://localhost:3000
 - **POST** `/pipelines` – Create a pipeline
 - **PUT** `/pipelines/:id` – Update a pipeline
 - **DELETE** `/pipelines/:id` – Delete a pipeline
+  
+---
 
-## 🔒 Authentication & Authorization
+## Authentication & Authorization
 
 - **Optional:** JWT-based authentication  
 - **Role-based access control:** Control access for pipelines and job monitoring
+  
 ---
 
-## ✨ Features
+## Features
 
 - Pipeline management (CRUD)  
 - Webhook ingestion & asynchronous processing  
@@ -156,7 +159,8 @@ Open in browser or use Postman:http://localhost:3000
 - Job monitoring API
   
 ---
-## ⚡ Pipeline Actions
+
+## Pipeline Actions
 
 Each pipeline can execute one or more actions when a job is processed. In this project, the actions include:
 
@@ -171,8 +175,10 @@ Each pipeline can execute one or more actions when a job is processed. In this p
 - **Achievement System**  
   Awards badges or achievements when users reach specific milestones.  
   **Purpose:** Encourages learning, motivates users, and tracks accomplishments.
+  
 ---
-## 📬 Subscriber Delivery
+
+## Subscriber Delivery
 
 After a job is processed, the results are sent to all registered subscribers for that pipeline.  
 
@@ -192,7 +198,8 @@ Suppose we have a pipeline `chapter_completed` with two subscribers:
 When a user completes a chapter, the worker processes the event, calculates the score, updates levels, awards achievements, and then sends the result JSON to both subscriber URLs.
 
 ---
-## ⚡ Reliability & Error Handling
+
+## Reliability & Error Handling
 - Retry mechanism with exponential backoff  
 - Logging of failed jobs  
 - Tracking delivery attempts  
@@ -200,7 +207,7 @@ When a user completes a chapter, the worker processes the event, calculates the 
   
 ---
 
-## 🔒 Authentication & Security Enhancements
+## Authentication & Security Enhancements
 
 - **JWT-based Authentication**  
   Secures API endpoints by requiring a valid token for access.  
@@ -216,7 +223,7 @@ When a user completes a chapter, the worker processes the event, calculates the 
   
 ---
 
-## 🎯 Future Improvements
+## Future Improvements
 
 - **Scalable Workers**  
   Currently, only one worker processes jobs, but the design allows running multiple workers on the same queue.  
