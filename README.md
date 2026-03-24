@@ -22,9 +22,6 @@
 - [Reliability & Error Handling](#reliability--error-handling)
 - [Authentication & Security Enhancements](#authentication--security-enhancements)
 - [Future Improvements](#future-improvements)
-- [Authors](#authors)
-- [License](#license)
-
 ---
 
 ## Overview
