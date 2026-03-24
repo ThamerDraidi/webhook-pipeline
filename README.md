@@ -123,13 +123,14 @@ This is an event-driven backend service that processes incoming webhook events a
 ## Running the App
 1. Run Docker Compose:  
 ```bash
-docker-compose up --build
+-docker-compose up --build
 
-2.Access API
+-Access API
 Open in browser or use Postman:http://localhost:3000
 
----
 ```
+---
+
 ## API Documentation
 
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
