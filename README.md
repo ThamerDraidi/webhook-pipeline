@@ -154,15 +154,6 @@ Global error handler middleware
 4. **Database (PostgreSQL)** – Stores persistent data (pipelines, jobs, users, achievements, etc.).
    
 ---
-**Flow:**
-
-1. Webhook request received at pipeline URL  
-2. API stores the event as a job in Redis queue  
-3. Worker picks up job, executes actions  
-4. Results sent to subscriber endpoints  
-5. Job status updated in PostgreSQL
-
----
 
 ## ⚙️ Prerequisites
 - Node.js v18+  
@@ -171,12 +162,6 @@ Global error handler middleware
 - Redis
 
 ---
-
-## 🚀 Running the App
- Clone the repository:
-```bash
-git clone https://github.com/YOUR_USERNAME/webhook-task-pipeline.git
-cd webhook-task-pipeline
 ## ⚙️ Setup & Running the App
 
 ###1. Setup environment variables (.env)
@@ -186,8 +171,10 @@ REDIS_URL=redis://localhost:6379
 PORT=3000
 2.Run Docker Compose:docker-compose up --build
 3.Access API=> Open in browser or use Postman:http://localhost:3000
+```
 ---
 ## 📄 API Documentation
+
 - **POST** `/webhooks/:pipelineId` – Send event to a pipeline
 - **GET** `/jobs/:jobId` – Retrieve job status and history
 - **GET** `/pipelines` – List pipelines
@@ -196,10 +183,13 @@ PORT=3000
 - **DELETE** `/pipelines/:id` – Delete a pipeline
 
 ## 🔒 Authentication & Authorization
+
 - **Optional:** JWT-based authentication  
 - **Role-based access control:** Control access for pipelines and job monitoring
 ---
+
 ## ✨ Features
+
 - Pipeline management (CRUD)  
 - Webhook ingestion & asynchronous processing  
 - Job queue system with retries  
@@ -207,12 +197,17 @@ PORT=3000
 - Processing actions: Score, Level, Achievement  
 - Subscriber delivery with retry & logging  
 - Job monitoring API
+  
+---
+
 ## ⚡ Reliability & Error Handling
 - Retry mechanism with exponential backoff  
 - Logging of failed jobs  
 - Tracking delivery attempts  
 - Graceful handling of worker crashes
+  
 ---
+
 ## 🔒 Authentication & Security Enhancements
 
 - **JWT-based Authentication**  
@@ -226,8 +221,11 @@ PORT=3000
 - **Rate Limiting**  
   Limits the number of requests per user or pipeline within a time frame.  
   **Reason:** Prevents abuse, DDoS attacks, and protects backend resources from being overwhelmed.
+  
 ---
+
 ## 🎯 Future Improvements
+
 - **Scalable Workers**  
   Currently, only one worker processes jobs, but the design allows running multiple workers on the same queue.  
   **Reason:** Enables handling higher loads of incoming webhooks, improves throughput, and ensures faster job processing without affecting API responsiveness.
