@@ -7,11 +7,13 @@ import { globalLimiter } from "./middleware/rateLimiter";
 import router from "./routes/index";
 
 const app = express();
+app.use("/api/webhooks", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(globalLimiter);
 app.use("/api", router);
+
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof BaseError) {

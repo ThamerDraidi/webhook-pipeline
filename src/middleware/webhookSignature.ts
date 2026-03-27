@@ -3,6 +3,10 @@ import crypto from "crypto";
 import { getPipelineById } from "../db/queries/pipelines";
 import { UnauthorizedError, NotFoundError } from "../error";
 
+ export interface WebhookRequest extends Request {
+  rawBody: string;
+}
+
 export async function verifyWebhookSignature(
   req: Request,
   res: Response,
@@ -21,10 +25,10 @@ export async function verifyWebhookSignature(
       throw new NotFoundError("Pipeline not found");
     }
 
-    const payload = JSON.stringify(req.body);
+const rawBody = req.body.toString();
     const expectedSignature = crypto
       .createHmac("sha256", pipeline.secret)
-      .update(payload)
+      .update(rawBody)
       .digest("hex");
 
     if (signature !== expectedSignature) {
