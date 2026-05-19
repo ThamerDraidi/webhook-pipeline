@@ -181,7 +181,7 @@ Each pipeline can execute one or more actions when a job is processed. In this p
 After a job is processed, the results are sent to all registered subscribers for that pipeline.  
 
 - **Multiple Subscribers:** Each pipeline can have one or more subscriber endpoints (URLs).  
-- **Retry Logic:** Failed deliveries are retried with exponential backoff to ensure reliability.  
+- **Retry Logic:** Failed deliveries are retried with linear backoff to ensure reliability.  
 - **Logging:** Every delivery attempt is logged to track success and failures.  
 
 **Example:**
