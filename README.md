@@ -198,7 +198,7 @@ When a user completes a chapter, the worker processes the event, calculates the 
 ---
 
 ## Reliability & Error Handling
-- Retry mechanism with exponential backoff  
+- Retry mechanism with linear backoff  
 - Logging of failed jobs  
 - Tracking delivery attempts  
 - Graceful handling of worker crashes
